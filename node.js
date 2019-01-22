@@ -3,6 +3,7 @@ const nodemailer = require('nodemailer');
 const path = require('path');
 const body_parser = require('body-parser');
 const { User, Coffee } = require('./db/mongodb');
+const {mailing} = require("./mailing/nodemailer");
 
 
 
@@ -15,31 +16,43 @@ app.get('/', (req, res) => {
     res.sendFile(`\index.html`)
 });
 
-app.get('/get', (req, res) => {
-    Coffee.find({ name: 'nsn' }, function (err, docs) {
+app.get('/getUsers', (req, res) => {
+    User.find({}, function (err, docs) {
         if (!err) {
+
             console.log(docs);
-            process.exit();
+            res.send(docs);
+
         } else { throw err; }
     });
-    res.send('sent');
+   
 
 })
 
 app.post('/pay', (req, res) => {
 
 
-    User.find({ name: req.body.userName }).then((doc) => {
-        if (doc.length >0) {
+    let name = req.body.userName;
+    let email = req.body.userEmail;
+    let mobile = req.body.userMobile;
+    let items = req.body.items;
+    let timestamp = req.body.timeStamp;
+    let user;
+
+
+    User.find({name}).then((doc) => {
+        if (doc.length > 0) {
+            console.log(typeof(doc));
+            
             console.log('User existed');
 
         } else {
 
-            var user = new User({
-                name: req.body.userName,
-                email: req.body.userEmail,
-                mobile: req.body.userMobile,
-                timestamp: req.body.timeStamp
+             user = new User({
+                name,
+                email,
+                mobile,
+                timestamp
             });
 
             user.save().then((doc) => {
@@ -50,15 +63,19 @@ app.post('/pay', (req, res) => {
     });
 
     var coffee = new Coffee({
-        name: req.body.userName,
-        items: req.body.items,
-        timestamp: req.body.timeStamp
+        name,
+        items,
+        timestamp
     })
 
     coffee.save().then((doc) => {
         console.log('coffee saved sucessfully', doc);
 
-    })
+    });
+
+
+console.log(`user ......    ${email}`);
+   mailing(coffee,email);
 
 
     res.send('got it')

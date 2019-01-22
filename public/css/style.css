@@ -127,10 +127,23 @@ button:hover
 	background-size: cover;
 }
 
-#coffees {
-	background-color: silver;
-	
-}
+
 .form-group {
 	display: inline-block;
+}
+
+.rightt {
+	min-width: 300px ;
+	
+	text-align: justify;
+	color:red
+}
+.leftt {
+	min-width: 300px ;
+
+	text-align: justify;
+}
+
+.coffees section {
+	border: #000 1px 1px 1px;
 }

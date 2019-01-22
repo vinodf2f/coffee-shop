@@ -4,9 +4,31 @@ myApp.controller('MainCtrl', ['$scope', '$http', function ($scope, $http) {
   $scope.userName;
   $scope.userEmail;
   $scope.userMobile;
-  var dateTime = new Date();
-  dateTime = moment(dateTime).format("MMMM Do YYYY, h:mm a");
-  console.log(dateTime);
+
+
+  $scope.users ;
+
+   $scope.getUsers = () => {
+    $http({
+      url: './getUsers',
+      method: "GET"
+    })
+      .then((res) => {
+       
+
+        $scope.users = Object.values(res.data);
+        console.log(typeof($scope.users))
+        console.log(Object.values(res.data));
+        
+        console.log(res.data);
+        console.log($scope.users);
+
+      });
+
+  }
+$scope.getUsers();
+
+
 
   $scope.invoice = {
     userName: '',
@@ -20,6 +42,8 @@ myApp.controller('MainCtrl', ['$scope', '$http', function ($scope, $http) {
       }
     ]
   };
+
+
   $scope.add = function () {
     $scope.invoice.items.push({
       name: '',
@@ -31,26 +55,20 @@ myApp.controller('MainCtrl', ['$scope', '$http', function ($scope, $http) {
 
 
   $scope.remove = function (index) {
-      $scope.invoice.items.splice(index, 1);
-    },
+    $scope.invoice.items.splice(index, 1);
+  },
     $scope.total = function () {
       var total = 0;
 
       total = $scope.invoice.items.map((item) => item.price * item.qty).reduce((acc, val) => acc + val, 0);
 
-
-
-
       // angular.forEach($scope.invoice.items, function(item){
       //   total += item.qty * item.price;
       // })
       return total;
-
-
     }
 
   $scope.pay = () => {
-    
     var dateTime = new Date();
     dateTime = moment(dateTime).format("MMMM Do YYYY, h:mm a");
 
@@ -59,42 +77,48 @@ myApp.controller('MainCtrl', ['$scope', '$http', function ($scope, $http) {
     $scope.invoice.userEmail = $scope.userEmail;
     $scope.invoice.userMobile = $scope.userMobile;
 
-    
-        $http({
-          url: './pay',
-          method: "POST",
-          data: $scope.invoice
-        })
-          .then(function (response) {
-            console.log('client sent to server');
-            swal(`${$scope.total()}`, ` Paid successfully thank u ${$scope.userName}`, "success");
 
-             $scope.invoice = {
-      userName: '',
-      userEmail: '',
-      items: [
-        {
-          name: '',
-          description: '',
-          qty: '',
-          price: ''
-        }
-      ]
-    };
+    $http({
+      url: './pay',
+      method: "POST",
+      data: $scope.invoice
+    })
+      .then(function (response) {
+        console.log('client sent to server');
+        swal(`${$scope.total()}`, ` Paid successfully thank u ${$scope.userName}`, "success");
 
-    $scope.userName = '';
-    $scope.userEmail = '';
-    $scope.userMobile = '';
+        $scope.invoice = {
+          userName: '',
+          userEmail: '',
+          items: [
+            {
+              name: '',
+              description: '',
+              qty: '',
+              price: ''
+            }
+          ]
+        };
 
-          },
-            function (response) { // optional
-              console.log('client could not sent to server');
-            });
-        console.log($scope.invoice)
+        $scope.userName = '';
+        $scope.userEmail = '';
+        $scope.userMobile = '';
+        $scope.getUsers();
+
+      },
+        function (response) { // optional
+          console.log('client could not sent to server');
+        });
+    console.log($scope.invoice)
+
+  }
 
 
-   
 
+  $scope.getDetails = (user) => {
+    $scope.userName = user.name;
+    $scope.userEmail = user.email;
+    $scope.userMobile = user.mobile;
   }
 
 }]);
