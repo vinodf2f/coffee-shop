@@ -37,16 +37,18 @@
 
 	</div>
 	<div class="row ">
-		<div  class="col-lg-3 leftt">
-		
-			<table class="table table-hover table-bordered " >
+		<div class="col-lg-2 leftt">
+
+			<table class="table table-hover table-bordered ">
 				<tr>
 					<th>users</th>
 				</tr>
-				<tr ng-repeat="user in users"><td ng-click="getDetails(user)">{{user.name}}</td></tr>
+				<tr ng-repeat="user in users">
+					<td ng-click="getDetails(user)">{{user.name}}</td>
+				</tr>
 			</table>
 
-	
+
 		</div>
 
 
@@ -120,9 +122,6 @@
 							</tr>
 
 							<tr>
-								<td></td>
-								<td></td>
-								<td></td>
 								<td>{{total()}} $</td>
 							</tr>
 
@@ -139,10 +138,50 @@
 
 		</div>
 		<div class="col-lg-3 rightt">
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque cum quam illum dolore, odit reprehenderit reiciendis adipisci quidem iste doloremque repudiandae tenetur, quisquam commodi at eius ipsum tempore, sint facilis!
+
+			<table class="table table-hover table-bordered ">
+				<tr>
+					<th colspan="4">Recent</th>
+				</tr>
+				<table ng-repeat="last in recent" class="table table-hover table-bordered ">
+					<tr>
+						<td colspan="2"><p>USER :  {{last.name}}</p>  </td>
+						<td colspan="2">{{last.timestamp}}</td>
+						
+					</tr>
+					<tr>
+							<th>item</th>
+							<th>description</th>
+							<th>Qty</th>
+							<th>Price</th>
+						</tr>
+					<tr ng-repeat="item in last.items">
+							<td>{{ item.name }}</td>
+							<td>{{ item.description }}</td>
+							<td>{{ item.qty }}</td>
+							<td>{{ item.price }}</td>
+					</tr>
+					<tr>
+						<td colspan="4">
+								<h4>Total"</h4>{{last.total}}
+						</td> 
+				</table>
+
+			</table>
 		</div>
 	</div>
 
 </body>
 
 </html>
+
+
+<!-- 
+<tr>
+	<th>Resent</th>
+<tr ng-repeat="last in recent">
+	<th>{{last.timestamp}}</th>
+	<td ng-repeat="item in last.items">{{item}}</td>
+
+</tr>
+</tr> -->

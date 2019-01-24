@@ -6,7 +6,52 @@ myApp.controller('MainCtrl', ['$scope', '$http', function ($scope, $http) {
   $scope.userMobile;
 
 
+//  items
+$scope.invoice = {
+  userName: '',
+  userEmail: '',
+  items: [
+    {
+      name: '',
+      description: '',
+      qty: '',
+      price: ''
+    }
+  ]
+};
+
+// adding new item
+
+$scope.add = function () {
+  $scope.invoice.items.push({
+    name: '',
+    description: '',
+    qty: 1,
+    price: 0
+  });
+};
+
+//removng item
+
+$scope.remove = function (index) {
+  $scope.invoice.items.splice(index, 1);
+},
+  $scope.total = function () {
+    var total = 0;
+
+    total = $scope.invoice.items.map((item) => item.price * item.qty).reduce((acc, val) => acc + val, 0);
+
+    // angular.forEach($scope.invoice.items, function(item){
+    //   total += item.qty * item.price;
+    // })
+    return total;
+  }
+
+
+
+  //Get userList in left side of UI
   $scope.users ;
+  $scope.recent;
 
    $scope.getUsers = () => {
     $http({
@@ -14,15 +59,9 @@ myApp.controller('MainCtrl', ['$scope', '$http', function ($scope, $http) {
       method: "GET"
     })
       .then((res) => {
-       
-
-        $scope.users = Object.values(res.data);
-        console.log(typeof($scope.users))
-        console.log(Object.values(res.data));
-        
-        console.log(res.data);
-        console.log($scope.users);
-
+        $scope.users = res.data.users;
+        $scope.recent = res.data.recent;
+         console.log(res.data.recent);
       });
 
   }
@@ -30,52 +69,17 @@ $scope.getUsers();
 
 
 
-  $scope.invoice = {
-    userName: '',
-    userEmail: '',
-    items: [
-      {
-        name: '',
-        description: '',
-        qty: '',
-        price: ''
-      }
-    ]
-  };
-
-
-  $scope.add = function () {
-    $scope.invoice.items.push({
-      name: '',
-      description: '',
-      qty: 1,
-      price: 0
-    });
-  };
-
-
-  $scope.remove = function (index) {
-    $scope.invoice.items.splice(index, 1);
-  },
-    $scope.total = function () {
-      var total = 0;
-
-      total = $scope.invoice.items.map((item) => item.price * item.qty).reduce((acc, val) => acc + val, 0);
-
-      // angular.forEach($scope.invoice.items, function(item){
-      //   total += item.qty * item.price;
-      // })
-      return total;
-    }
+//pay http request
 
   $scope.pay = () => {
     var dateTime = new Date();
     dateTime = moment(dateTime).format("MMMM Do YYYY, h:mm a");
 
-    $scope.invoice.timeStamp = dateTime;
+    $scope.invoice.timestamp = dateTime;
     $scope.invoice.userName = $scope.userName;
     $scope.invoice.userEmail = $scope.userEmail;
     $scope.invoice.userMobile = $scope.userMobile;
+    $scope.invoice.total = $scope.total();
 
 
     $http({
@@ -113,13 +117,18 @@ $scope.getUsers();
 
   }
 
-
+//Get details
 
   $scope.getDetails = (user) => {
     $scope.userName = user.name;
     $scope.userEmail = user.email;
     $scope.userMobile = user.mobile;
   }
+
+
+
+
+
 
 }]);
 

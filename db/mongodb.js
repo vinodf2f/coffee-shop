@@ -23,6 +23,9 @@ let Coffee = mongoose.model('Coffee', {
   items: {
     type:Array
   },
+  total :{
+    type:Number
+  },
   timestamp : {
     type: String
   }

@@ -17,17 +17,27 @@ app.get('/', (req, res) => {
 });
 
 app.get('/getUsers', (req, res) => {
+
+    let users;
     User.find({}, function (err, docs) {
         if (!err) {
 
-            console.log(docs);
-            res.send(docs);
+            // console.log(docs);
+           users = docs;
 
         } else { throw err; }
     });
    
 
-})
+    Coffee.find().sort( { 'timestamp': -1 } ).limit(10).then((recent) => {
+        // console.log(recent);
+        res.send({users,recent});
+    }, (err)=> {
+        console.log(err)
+    })
+
+
+});
 
 app.post('/pay', (req, res) => {
 
@@ -36,7 +46,10 @@ app.post('/pay', (req, res) => {
     let email = req.body.userEmail;
     let mobile = req.body.userMobile;
     let items = req.body.items;
-    let timestamp = req.body.timeStamp;
+    let timestamp = req.body.timestamp;
+    let total = req.body.total;
+    console.log(total);
+    
     let user;
 
 
@@ -65,6 +78,7 @@ app.post('/pay', (req, res) => {
     var coffee = new Coffee({
         name,
         items,
+        total,
         timestamp
     })
 
@@ -79,7 +93,14 @@ console.log(`user ......    ${email}`);
 
 
     res.send('got it')
-})
+});
+
+
+
+
+
+
+
 app.listen(3000, () => {
     console.log('on 3000');
 

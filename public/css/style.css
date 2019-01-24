@@ -133,10 +133,11 @@ button:hover
 }
 
 .rightt {
-	min-width: 300px ;
+ 
+	overflow:scroll; 
+	height:500px;
+	text-align: center;
 	
-	text-align: justify;
-	color:red
 }
 .leftt {
 	min-width: 300px ;
